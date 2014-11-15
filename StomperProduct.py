@@ -20,10 +20,11 @@ DESTINATION="/topic/inbox"
 
 class StompProtocol(Protocol, stomper.Engine):
 
-    def __init__(self, username='', password=''):
+    def __init__(self, username='', password='', host='127.0.0.1'):
         stomper.Engine.__init__(self)
         self.username = username
         self.password = password
+        self.host = host
         self.counter = itertools.count(0)
         self.log = logging.getLogger("sender")
         self.senderID = str(uuid.uuid4())
@@ -93,22 +94,26 @@ class StompProtocol(Protocol, stomper.Engine):
     def connectionMade(self):
         """Register with stomp server.
         """
-        cmd = stomper.connect(self.username, self.password, "127.0.0.1")
+        print "connect made .."
+        cmd = stomper.connect(self.username, self.password, self.host)
+        print "cmd is-------->",
         self.transport.write(cmd)
 
 
     def dataReceived(self, data):
         """Data received, react to it and respond if needed.
         """
-        #print "sender dataReceived: <%s>" % data
+        print "sender dataReceived: <%s>" % data
 
         msg = stomper.unpack_frame(data)
         
         returned = self.react(msg)
+        print "returned ----", returned
 
         #print "sender returned: <%s>" % returned
 
         if returned:
+            print "+++++++++++++++++"
             self.transport.write(returned)
 
 
@@ -140,6 +145,7 @@ def start(host='127.0.0.1', port=61613, username='', password=''):
     """
     StompClientFactory.username = username
     StompClientFactory.password = password
+    StompClientFactory.host = host
     reactor.connectTCP(host, port, StompClientFactory())
     reactor.run()
 

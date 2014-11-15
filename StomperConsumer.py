@@ -14,10 +14,11 @@ DESTINATION="/topic/inbox"
 
 class MyStomp(stomper.Engine):
     
-    def __init__(self, username='', password=''):
+    def __init__(self, username='', password='', host='127.0.0.1'):
         super(MyStomp, self).__init__()
         self.username = username
         self.password = password
+        self.host = host
         self.log = logging.getLogger("receiver")
         self.receiverId = str(uuid.uuid4())
 
@@ -87,12 +88,10 @@ class StompClientFactory(ReconnectingClientFactory):
         """Started to connect.
         """
 
-
     def buildProtocol(self, addr):
         """Transport level connected now create the communication protocol.
         """
-        return StompProtocol(self.username, self.password)
-    
+        return StompProtocol(self.username, self.password)    
     
     def clientConnectionLost(self, connector, reason):
         """Lost connection
@@ -113,6 +112,7 @@ def start(host='127.0.0.1', port=61613, username='', password=''):
     """
     StompClientFactory.username = username
     StompClientFactory.password = password
+    StompClientFactory.host = host
     reactor.connectTCP(host, port, StompClientFactory())
     reactor.run()
 
