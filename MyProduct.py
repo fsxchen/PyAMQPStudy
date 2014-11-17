@@ -68,10 +68,9 @@ class StompProtocol(Protocol):
     def dataReceived(self, data):
         """Data received, react to it and respond if needed.
         """
-       	print "receiver dataReceivedalksdfajfja <%s>" % data
+       	print "receiver dataReceived: <%s>" % data
         
         msg = stomper.unpack_frame(data)
-        print msg
         
         returned = self.sm.react(msg)
 

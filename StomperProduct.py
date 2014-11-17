@@ -106,6 +106,8 @@ class StompProtocol(Protocol, stomper.Engine):
         print "sender dataReceived: <%s>" % data
 
         msg = stomper.unpack_frame(data)
+
+        print "msg is lllllll", msg
         
         returned = self.react(msg)
         print "returned ----", returned
