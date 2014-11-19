@@ -45,7 +45,8 @@ def main():
     conn.connect()   
     conn.subscribe(destination=dest, id=1, ack='auto')
     print "waiting for a message"
-
+    while 1:
+        time.sleep(10)
     # while num < 2:   
     #     conn.send(body=msg, destination=dest)   
     #     print 'send message ', msg   
